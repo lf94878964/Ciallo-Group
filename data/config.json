@@ -1,0 +1,14 @@
+{
+  "backgrounds": [
+    "background/yoshino.jpg",
+    "background/megulu.png",
+    "background/megulu2.png",
+    "background/murasame.png",
+    "background/mayu.png"
+  ],
+  "music": [
+    "music/ciallo1.mp3",
+    "music/ciallo2.mp3",
+    "music/ciallo3.mp3"
+  ]
+}

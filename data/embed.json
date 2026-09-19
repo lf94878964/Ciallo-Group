@@ -1,0 +1,35 @@
+{
+  "component": {
+    "type": 17,
+    "accent_color": 16727212,
+    "components": [
+      {
+        "type": 12,
+        "items": [
+          { "media": { "url": "https://ciallo.group/data/url_embed/ciallo.gif" }, "description": "ciallo.group 背景圖" }
+        ]
+      },
+      {
+        "type": 9,
+        "components": [
+          {
+            "type": 10,
+            "content": "# Ciallo～(∠・ω< )⌒☆彈幕產生器\nCiallo～(∠・ω< )⌒☆\n☆⌒( >ω・∠)～ollɐıɔ\nCiallo～(∠・ω<)⌒☆\n☆⌒( >ω・∠)～ollɐıɔ\n\n-# [ciallo.group](https://ciallo.group) | By:頑固苗獨份子"
+          }
+        ],
+        "accessory": {
+          "type": 11,
+          "media": { "url": "https://ciallo.group/data/url_embed/avatar.png" }
+        }
+      },
+      { "type": 14, "spacing": 1 },
+      {
+        "type": 1,
+        "components": [
+          { "type": 2, "style": 5, "url": "https://discord.com/oauth2/authorize?client_id=1379034361579438161&permissions=8&integration_type=0&scope=applications.commands+bot", "label": "邀請千恋＊萬花機器人！" },
+          { "type": 2, "style": 5, "url": "https://discord.gg/nNn8GsF5bA", "label": "支援群組" }
+        ]
+      }
+    ]
+  }
+}

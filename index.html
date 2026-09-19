@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciallo～(∠・ω&lt; )⌒☆ | ciallo.group</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☆</text></svg>">
+
+<link
+  rel="discord:component-embed"
+  type="application/json"
+  href="https://ciallo.group/data/url_embed/embed.json"
+>
+
+
+<meta property="og:title" content="ciallo.group" />
+<meta property="og:description" content="Ciallo～(∠・ω< )⌒☆ 彈幕產生器，五顏六色的文字配上滿滿語音特效。" />
+<meta property="og:image" content="https://ciallo.group/data/url_embed/banner.jpg" />
+<meta property="og:url" content="https://ciallo.group" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Pacifico&family=ZCOOL+KuaiLe&family=Comic+Neue:ital,wght@0,700;1,700&family=Baloo+2:wght@700;800&family=Zhi+Mang+Xing&family=Yuji+Syuku&family=Rampart+One&family=Kablammo&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    color-scheme: dark;
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; width:100%; height:100%;
+    overflow:hidden;
+    background:#0a0a12;
+    font-family: sans-serif;
+  }
+
+  #bg{
+    position:fixed; inset:0;
+    background-size:cover;
+    background-position:center;
+    filter:brightness(0.55) saturate(1.1);
+    transition:opacity 1.2s ease;
+    z-index:0;
+  }
+  #bg::after{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%);
+  }
+
+  #stage{
+    position:fixed; inset:0;
+    z-index:2;
+    pointer-events:none;
+    overflow:hidden;
+  }
+
+  .danmu{
+    position:absolute;
+    left:100%;
+    white-space:nowrap;
+    will-change: transform;
+    text-shadow:
+      -1.5px -1.5px 0 #000,
+       1.5px -1.5px 0 #000,
+      -1.5px  1.5px 0 #000,
+       1.5px  1.5px 0 #000,
+       0 0 12px rgba(0,0,0,0.6);
+    animation-name: flyLeft;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes flyLeft{
+    from{ transform: translateX(0); }
+    to  { transform: translateX(calc(-100vw - 100%)); }
+  }
+
+  #hero{
+    position:fixed; inset:0;
+    z-index:1;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    pointer-events:none;
+    gap:0.6rem;
+    padding:0 1rem;
+  }
+  #hero h1{
+    margin:0;
+    font-family:"Bungee", "ZCOOL KuaiLe", sans-serif;
+    font-size:clamp(2rem, 7vw, 4.5rem);
+    letter-spacing:1px;
+    background:linear-gradient(90deg,#ff3cac,#784ba0,#2b86c5,#00e0d3,#ffd200,#ff3cac);
+    background-size:300% 100%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation: gradientShift 6s linear infinite;
+    text-shadow:none;
+  }
+  @keyframes gradientShift{
+    to{ background-position:300% 0; }
+  }
+  #hero p{
+    margin:0;
+    color:#eee;
+    font-family:"Comic Neue", sans-serif;
+    font-weight:700;
+    font-size:clamp(0.9rem, 2vw, 1.2rem);
+    text-shadow:0 2px 6px rgba(0,0,0,0.8);
+    opacity:0.85;
+  }
+
+  #unlock{
+    position:fixed; inset:0; z-index:10;
+    background:rgba(5,5,10,0.88);
+    display:none;
+    align-items:center; justify-content:center;
+    flex-direction:column;
+    gap:1rem;
+    color:#fff;
+    text-align:center;
+    padding:1rem;
+  }
+  #unlock.show{ display:flex; }
+  #unlock button{
+    font-family:"Bungee", sans-serif;
+    font-size:1.3rem;
+    padding:0.9rem 2rem;
+    border:3px solid #fff;
+    border-radius:999px;
+    background:linear-gradient(90deg,#ff3cac,#2b86c5);
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 0 25px rgba(255,60,172,0.6);
+  }
+  #unlock button:hover{ filter:brightness(1.15); }
+  #unlock small{ opacity:0.7; max-width:26rem; }
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div id="hero">
+  <h1>ciallo.group</h1>
+  <p>Ciallo～(∠・ω&lt; )⌒☆ 彈幕產生器</p>
+</div>
+<div id="stage"></div>
+
+<div id="unlock">
+  <button id="unlockBtn">🔊 點我開聲音</button>
+  <small>瀏覽器擋掉了自動播放音效，點一下按鈕就可以聽到滿滿的 Ciallo 語音了！</small>
+</div>
+
+<script>
+(async () => {
+  const STAGE = document.getElementById('stage');
+  const BG = document.getElementById('bg');
+  const unlockOverlay = document.getElementById('unlock');
+  const unlockBtn = document.getElementById('unlockBtn');
+
+  const FONTS = [
+    "'Bungee', sans-serif",
+    "'Pacifico', cursive",
+    "'ZCOOL KuaiLe', sans-serif",
+    "'Comic Neue', sans-serif",
+    "'Baloo 2', sans-serif",
+    "'Zhi Mang Xing', cursive",
+    "'Yuji Syuku', serif",
+    "'Rampart One', sans-serif",
+    "'Kablammo', sans-serif",
+    "sans-serif",
+    "monospace",
+    "cursive"
+  ];
+
+  let texts = ["Ciallo～(∠・ω< )⌒☆"];
+  let musicFiles = [];
+  let bgFiles = [];
+  let audioUnlocked = false;
+  let pendingAudioNeedsUnlock = false;
+
+  async function loadJSON(path, fallback){
+    try{
+      const res = await fetch(path, {cache:'no-store'});
+      if(!res.ok) throw new Error(res.status);
+      return await res.json();
+    }catch(e){
+      console.warn('讀取失敗，改用預設值：', path, e);
+      return fallback;
+    }
+  }
+
+  const cfg = await loadJSON('data/config.json', {backgrounds:[], music:[]});
+  bgFiles = (cfg.backgrounds || []).map(p => 'data/' + p.replace(/^data\//,''));
+  musicFiles = (cfg.music || []).map(p => 'data/' + p.replace(/^data\//,''));
+
+  const loadedTexts = await loadJSON('data/ciallo_texts.json', null);
+  if (Array.isArray(loadedTexts) && loadedTexts.length) texts = loadedTexts;
+
+  function pick(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+  function rand(min, max){ return Math.random() * (max - min) + min; }
+  function randomColor(){
+    const h = Math.floor(rand(0, 360));
+    const s = Math.floor(rand(70, 100));
+    const l = Math.floor(rand(55, 78));
+    return `hsl(${h} ${s}% ${l}%)`;
+  }
+
+  function setRandomBackground(){
+    if (!bgFiles.length) return;
+    const img = pick(bgFiles);
+    const pre = new Image();
+    pre.onload = () => { BG.style.backgroundImage = `url("${img}")`; };
+    pre.onerror = () => { console.warn('背景圖載入失敗：', img); };
+    pre.src = img;
+  }
+
+  function playRandomVoice(){
+    if (!musicFiles.length) return;
+    const src = pick(musicFiles);
+    const audio = new Audio(src);
+    audio.volume = 0.85;
+    const p = audio.play();
+    if (p !== undefined){
+      p.catch(() => {
+        if (!audioUnlocked){
+          pendingAudioNeedsUnlock = true;
+          unlockOverlay.classList.add('show');
+        }
+      });
+    }
+  }
+
+  unlockBtn.addEventListener('click', () => {
+    audioUnlocked = true;
+    unlockOverlay.classList.remove('show');
+    playRandomVoice();
+  });
+
+  function spawnDanmu(){
+    const el = document.createElement('div');
+    el.className = 'danmu';
+    el.textContent = pick(texts);
+
+    const fontSize = rand(1.4, 3.6);
+    el.style.fontSize = fontSize + 'rem';
+    el.style.top = rand(4, 88) + '%';
+    el.style.color = randomColor();
+    el.style.fontFamily = pick(FONTS);
+    el.style.fontWeight = Math.random() > 0.4 ? '900' : '400';
+    el.style.fontStyle = Math.random() > 0.5 ? 'italic' : 'normal';
+
+    const duration = rand(6, 13) * (2.2 / fontSize) ;
+    el.style.animationDuration = duration.toFixed(2) + 's';
+
+    el.addEventListener('animationend', () => el.remove());
+    STAGE.appendChild(el);
+
+    playRandomVoice();
+  }
+
+  setRandomBackground();
+  spawnDanmu();
+  function loop(){
+    spawnDanmu();
+    setTimeout(loop, rand(450, 1400));
+  }
+  setTimeout(loop, rand(450, 1400));
+
+  setInterval(setRandomBackground, 20000);
+})();
+</script>
+</body>
+</html>
