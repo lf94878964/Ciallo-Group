@@ -6,7 +6,7 @@
       {
         "type": 12,
         "items": [
-          { "media": { "url": "https://ciallo.group/data/url_embed/ciallo.gif" }, "description": "ciallo.group 背景圖" }
+          { "media": { "url": "https://github.com/lf94878964/image/blob/main/ciallo.gif?raw=true" }, "description": "ciallo.group 背景圖" }
         ]
       },
       {
@@ -19,7 +19,7 @@
         ],
         "accessory": {
           "type": 11,
-          "media": { "url": "https://ciallo.group/data/url_embed/avatar.png" }
+          "media": { "url": "https://github.com/lf94878964/image/blob/main/avatar.png?raw=true" }
         }
       },
       { "type": 14, "spacing": 1 },
